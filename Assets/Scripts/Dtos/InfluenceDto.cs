@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-	class InfluenceDto
+	[Serializable]
+	public class InfluenceDto
 	{
+		public int Id { get; set; }
+
 		public string Description { get; set; }
-		public Subject FromSubject { get; set; }
-		public Subject ToSubject { get; set; }
+		public int FromSubjectId { get; set; }
+		public int ToSubjectId { get; set; }
 		public float EnergyFactor { get; set; }
 	}
 }

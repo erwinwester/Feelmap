@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-	class SubjectDto
+	[Serializable]
+	public class SubjectDto
 	{
 		public int Id { get; set; }
 		public string Description { get; set; }
 		public float Energy { get; set; }
 		public float Feel { get; set; }
 		public float Distance { get; set; }
+		public bool Root { get; set; }
 	}
 }

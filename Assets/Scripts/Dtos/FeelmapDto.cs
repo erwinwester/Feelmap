@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-	class FeelmapDto
+	[Serializable]
+	public class FeelmapDto
 	{
 		public List<SubjectDto> SubjectDtos = new();
 		public List<InfluenceDto> InfluenceDtos = new();
