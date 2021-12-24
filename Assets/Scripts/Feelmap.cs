@@ -9,6 +9,7 @@ namespace Assets.Scripts
 	class Feelmap
 	{
 		public Subject MainSubject { get; set; }
+
 		public List<Subject> Subjects = new();
 		public List<Influence> Influences = new();
 	}
