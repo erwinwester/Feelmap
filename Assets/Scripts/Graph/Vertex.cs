@@ -10,6 +10,7 @@ public class Vertex : MonoBehaviour
 	public float Lightness = 0f;
 	public List<Edge> ConnectedEdges = new List<Edge>();
 	public int Connectedness => this.ConnectedEdges.Count;
+	public int Id { get; set; }
 
 	private Rigidbody _rigidbody;
 

@@ -12,6 +12,10 @@ namespace Assets.Scripts
 {
 	public class GraphManager : MonoBehaviour
 	{
+		public Vertex VertexPrefab;
+		public Edge EdgePrefab;
+		public Transform Container;
+
 		// Variables that may change at runtime.
 		public float GraphCeiling = 10f;
 		public float GraphFloor = -10f;
@@ -50,13 +54,39 @@ namespace Assets.Scripts
 			}
 		}
 
-		public void CreateGraph(List<Edge> newEdges, List<Vertex> newVertices)
+		public void CreateGraph(List<Vertex> newVertices, List<Edge> newEdges)
 		{
+			ClearGraph();
 
+            foreach (Vertex newVertex in newVertices)
+            {
+				var vertex = Instantiate(VertexPrefab, Container);
+				vertex.Id = newVertex.Id;
+				vertex.Lightness = newVertex.Lightness;
+				vertices.Add(vertex);
+            }
+
+            foreach (Edge newEdge in newEdges)
+            {
+				Vertex vA = vertices.Single(v => v.Id == newEdge.VertexA.Id);
+				Vertex vB = vertices.Single(v => v.Id == newEdge.VertexB.Id);
+
+				var edge = Instantiate(EdgePrefab, Container);
+				edge.VertexA = vA;
+				edge.VertexB = vB;
+				edge.MaxLength = newEdge.MaxLength;
+				edge.Stiffness = newEdge.Stiffness;
+				edges.Add(edge);
+
+				vA.ConnectedEdges.Add(edge);
+				vB.ConnectedEdges.Add(edge);
+			}
 		}
 
 		public void ClearGraph()
 		{
+			Container.DestroyChildren();
+
 			edges.Clear();
 			vertices.Clear();
 		}

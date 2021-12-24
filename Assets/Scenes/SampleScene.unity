@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -164,22 +164,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 368193444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6478cdf752f2a1942b374bac38e8b2f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b7de9aa232ba944ea0b3583f2a206ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VertexPrefab: {fileID: -4086429297904052075, guid: e32b59ba8b5e096499474d568d8579d0, type: 3}
-  EdgePrefab: {fileID: -6861407081325219328, guid: 429835d534dcfd746a7bc5b6f49cc0e1, type: 3}
+  VertexPrefab: {fileID: 6004569599503756523, guid: e32b59ba8b5e096499474d568d8579d0, type: 3}
+  EdgePrefab: {fileID: 284871572568946360, guid: 429835d534dcfd746a7bc5b6f49cc0e1, type: 3}
   Container: {fileID: 368193445}
-  VerticesToSpawn: 80
-  AverageConnectedness: 2
-  Acyclic: 0
-  EdgeMaxLength: 9
-  EdgeStiffness: 3
   GraphCeiling: 10
   GraphFloor: -10
   RepulsionForceScale: 1
   PullForceScale: 1
-  MaxForceMagnitude: 100
+  MaxForceMagnitude: 10
   CenterOfGraph: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -369,35 +364,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3710e6fe6e53a8c4993b1db4a4c82868, type: 3}
+  m_Script: {fileID: 11500000, guid: a0c58877211c9a14b816025e2de30ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mainSpeed: 10
+  maxShift: 20
   rotateSpeed: 10
-  moveCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &2058712939
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +400,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filename: .\Data\feelmap.json
+  graphManager: {fileID: 368193446}
+  VerticesToSpawn: 40
+  AverageConnectedness: 1.2
+  Acyclic: 1
+  EdgeMaxLength: 10
+  EdgeStiffness: 10
 --- !u!4 &2058712941
 Transform:
   m_ObjectHideFlags: 0
@@ -436,7 +414,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058712939}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.8821536, y: 1.6680553, z: 6.943804}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

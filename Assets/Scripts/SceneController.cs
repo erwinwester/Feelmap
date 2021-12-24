@@ -14,9 +14,6 @@ namespace Assets.Scripts
 		[SerializeField]
 		private string filename = @".\Data\feelmap.json";
 		// Prefabs.
-		public Vertex VertexPrefab;
-		public Edge EdgePrefab;
-		public Transform Container;
 		public GraphManager graphManager;
 
 		// Variables that are only evaluated at start.
@@ -35,7 +32,7 @@ namespace Assets.Scripts
 		void Start()
 		{
 			InitializeGraphRandom();
-			//CreateGraph();
+			//ReloadGraph();
 		}
 
 		// Update is called once per frame
@@ -52,7 +49,8 @@ namespace Assets.Scripts
 			// Spawn all vertices.
 			for (int i = 0; i < this.VerticesToSpawn; i++)
 			{
-				Vertex vertex = Instantiate(this.VertexPrefab, this.Container);
+				Vertex vertex = new();
+				vertex.Id = i;
 				vertex.Lightness = Random.value;
 				vertices.Add(vertex);
 			}
@@ -64,10 +62,16 @@ namespace Assets.Scripts
 
 			while (unconnectedVertices.Any())
 			{
-				Vertex parent = connectedVertices.GetOne();
-				Vertex child = unconnectedVertices.RemoveOne();
-				edges.Add(SpawnEdge(parent, child));
-				connectedVertices.Add(child);
+				Vertex v1 = connectedVertices.GetOne();
+				Vertex v2  = unconnectedVertices.RemoveOne();
+
+				Edge edge = new();
+				edge.VertexA = v1;
+				edge.VertexB = v2;
+				edge.MaxLength = EdgeMaxLength;
+				edge.Stiffness = EdgeStiffness;
+				edges.Add(edge);
+				connectedVertices.Add(v2);
 			}
 
 			if (!Acyclic)
@@ -87,37 +91,26 @@ namespace Assets.Scripts
 						|| !v.ConnectedEdges.Select(e => e.VertexB).Contains(v1)));
 					Vertex v2 = notFullyConnectedVertices.RemoveOne();
 
-					edges.Add(SpawnEdge(v1, v2));
+					Edge edge = new();
+					edge.VertexA = v1;
+					edge.VertexB = v2;
+					edge.MaxLength = EdgeMaxLength;
+					edge.Stiffness = EdgeStiffness;
+					edges.Add(edge);
 					unconnectedVertices.Remove(v2);
 
 					currentAverageConnectedness = (float)edges.Count / (float)vertices.Count;
 				}
 			}
 
-			graphManager.CreateGraph(edges, vertices);
-		}
-
-		private Edge SpawnEdge(Vertex v1, Vertex v2)
-		{
-			Edge edge = Instantiate(EdgePrefab, Container);
-			edge.VertexA = v1;
-			edge.VertexB = v2;
-			edge.MaxLength = EdgeMaxLength;
-			edge.Stiffness = EdgeStiffness;
-
-			v1.ConnectedEdges.Add(edge);
-			v2.ConnectedEdges.Add(edge);
-
-			return edge;
+			graphManager.CreateGraph(vertices, edges);
 		}
 
 		private void ReloadGraph()
 		{
-			Container.DestroyChildren();
 			feelmap = LoadFeelMap();
-			// Clear Graph objects
 
-			// Create graph
+			// This first clears the previous graph
 			CreateGraphFromFeelmap();
 		}
 
@@ -126,20 +119,28 @@ namespace Assets.Scripts
 			List<Edge> edges = new List<Edge>();
 			List<Vertex> vertices = new List<Vertex>();
 
+			// Root subject
+			// ?
+
 			foreach (var Subject in feelmap.Subjects)
 			{
-				Vertex vertex = Instantiate(this.VertexPrefab, this.Container);
+				Vertex vertex = new();
+				vertex.Id = Subject.Id;
 				vertex.Lightness = Subject.Energy;
 				vertices.Add(vertex);
 			}
 
 			foreach (var Influence in feelmap.Influences)
 			{
-				Edge edge = Instantiate(this.EdgePrefab, this.Container);
-				edges.Add(SpawnEdge());
+				Edge edge = new();
+				edge.VertexA = vertices.Single(v => v.Id == Influence.FromSubject.Id);
+				edge.VertexB = vertices.Single(v => v.Id == Influence.ToSubject.Id);
+				edge.MaxLength = EdgeMaxLength;
+				edge.Stiffness = EdgeStiffness;
+				edges.Add(edge);
 			}
 
-			graphManager.CreateGraph(edges, vertices);
+			graphManager.CreateGraph(vertices, edges);
 		}
 
 		private void SaveFeelmap()

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 618520778007481579}
-  - component: {fileID: -6861407081325219328}
+  - component: {fileID: 284871572568946360}
   m_Layer: 0
   m_Name: Edge
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6861407081325219328
+--- !u!114 &284871572568946360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3497610486284249231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d04b3f887ac1334ca877ebfb95c0abc, type: 3}
+  m_Script: {fileID: 11500000, guid: 65f8291f1ed76244097a2fab16d9c1e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   VertexA: {fileID: 0}
