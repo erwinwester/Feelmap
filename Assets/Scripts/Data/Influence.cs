@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.Scripts.Graph;
+using System;
 
 namespace Assets.Scripts
 {
-	public class Influence
+    public class Influence : IGraphEdgeInfoObject
 	{
 		public int Id { get; set; }
 
@@ -14,5 +11,25 @@ namespace Assets.Scripts
 		public Subject FromSubject { get; set; }
 		public Subject ToSubject { get; set; }
 		public float EnergyFactor { get; set; }
-	}
+
+        string IGraphEdgeInfoObject.GetDescription()
+        {
+            return Description;
+        }
+
+        float IGraphEdgeInfoObject.GetEnergyFactor()
+        {
+            return EnergyFactor;
+        }
+
+        void IGraphEdgeInfoObject.SetDescription(string description)
+        {
+            this.Description = description;
+        }
+
+        void IGraphEdgeInfoObject.SetEnergyFactor(float energyFactor)
+        {
+            this.EnergyFactor = energyFactor;
+        }
+    }
 }

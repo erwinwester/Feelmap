@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Graph;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,13 @@ public class Edge : MonoBehaviour
 	public Vertex VertexB;
 	public float MaxLength = 1f;
 	public float Stiffness = 10f;
+
+	public IGraphEdgeInfoObject InfoObject { get; private set; } 
+
+	public void SetInfoObject(IGraphEdgeInfoObject infoObject)
+    {
+		this.InfoObject = infoObject;
+    }
 
 	public Vector3 GetPullStrength(Vertex onVertex)
 	{

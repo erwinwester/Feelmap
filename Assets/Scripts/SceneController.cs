@@ -52,6 +52,12 @@ namespace Assets.Scripts
 				Vertex vertex = new();
 				vertex.Id = i;
 				vertex.Lightness = Random.value;
+				vertex.SetInfoObject(new Subject { 
+					Description = i.ToString(),
+					Energy = Random.value,
+					Distance = Random.value,
+					Feel = Random.value,
+				});
 				vertices.Add(vertex);
 			}
 
@@ -135,6 +141,7 @@ namespace Assets.Scripts
 				Vertex vertex = new();
 				vertex.Id = Subject.Id;
 				vertex.Lightness = Subject.Energy;
+				vertex.SetInfoObject(Subject);
 				vertices.Add(vertex);
 			}
 
@@ -145,6 +152,7 @@ namespace Assets.Scripts
 				edge.VertexB = vertices.Single(v => v.Id == Influence.ToSubject.Id);
 				edge.MaxLength = EdgeMaxLength;
 				edge.Stiffness = EdgeStiffness;
+				edge.SetInfoObject(Influence);
 				edges.Add(edge);
 			}
 

@@ -1,23 +1,52 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Graph;
 using System.Collections.Generic;
 using System.Linq;
-
+using TMPro;
 using UnityEngine;
 
 public class Vertex : MonoBehaviour
 {
-	[Range(0f, 1f)]
-	public float Lightness = 0f;
-	public List<Edge> ConnectedEdges = new List<Edge>();
-	public int Connectedness => this.ConnectedEdges.Count;
 	public int Id { get; set; }
 
+	[Range(0f, 1f)]
+	public float Lightness = 0f;
+
+	public List<Edge> ConnectedEdges = new List<Edge>();
+	public int Connectedness => this.ConnectedEdges.Count;
+	
 	private Rigidbody _rigidbody;
+	private Material _material;
+	private TextMeshPro _textMeshPro;
+
+	public IGraphVertexInfoObject InfoObject { get; private set; }
+
+	private bool InfoObjectUpdated;
+
+	public void SetInfoObject(IGraphVertexInfoObject infoObject)
+    {
+		this.InfoObject = infoObject;
+		this.InfoObjectUpdated = true;
+	}
 
 	public void Start()
 	{
-		this.GetComponentInChildren<MeshRenderer>().material.color = Color.Lerp(Color.black, Color.white, Lightness);
 		this._rigidbody = this.GetComponent<Rigidbody>();
+		this._material = this.GetComponentInChildren<MeshRenderer>().material;
+		this._textMeshPro = this.GetComponentInChildren<TextMeshPro>();
+	}
+
+    public void Update()
+    {
+		this._material.color = Color.Lerp(Color.black, Color.white, Lightness);
+
+		if (this.InfoObjectUpdated == true)
+		{
+			this.InfoObjectUpdated = false;
+			if (this._textMeshPro != null && this.InfoObject != null)
+			{
+				_textMeshPro.text = this.InfoObject.GetDescription();
+			}
+		}
 	}
 
 	public Vector3 GetRepulsionForce(Vertex otherVertex)

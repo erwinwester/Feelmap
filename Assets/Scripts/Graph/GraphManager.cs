@@ -63,6 +63,7 @@ namespace Assets.Scripts
 				var vertex = Instantiate(VertexPrefab, Container);
 				vertex.Id = newVertex.Id;
 				vertex.Lightness = newVertex.Lightness;
+				vertex.SetInfoObject(newVertex.InfoObject);
 				vertices.Add(vertex);
             }
 
@@ -76,6 +77,7 @@ namespace Assets.Scripts
 				edge.VertexB = vB;
 				edge.MaxLength = newEdge.MaxLength;
 				edge.Stiffness = newEdge.Stiffness;
+				edge.SetInfoObject(newEdge.InfoObject);
 				edges.Add(edge);
 
 				vA.ConnectedEdges.Add(edge);
