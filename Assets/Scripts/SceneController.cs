@@ -60,10 +60,18 @@ namespace Assets.Scripts
 			var connectedVertices = new RandomList<Vertex>();
 			connectedVertices.Add(unconnectedVertices.RemoveOne());
 
+			int j = 2 + Random.Range(0, 3); ;
+			Vertex v1 = connectedVertices.GetOne();
 			while (unconnectedVertices.Any())
 			{
-				Vertex v1 = connectedVertices.GetOne();
-				Vertex v2  = unconnectedVertices.RemoveOne();
+				if (j<=0)
+                {
+					j = 2 + Random.Range(0, 3);
+					v1 = connectedVertices.GetOne();
+				}
+				j--;
+
+				Vertex v2 = unconnectedVertices.RemoveOne();
 
 				Edge edge = new();
 				edge.VertexA = v1;
@@ -83,7 +91,7 @@ namespace Assets.Scripts
 				while (currentAverageConnectedness < actualAverageConnectedness)
 				{
 					var notFullyConnectedVertices = new RandomList<Vertex>(vertices.Where(v => v.Connectedness < vertices.Count - 1));
-					Vertex v1 = notFullyConnectedVertices.RemoveOne();
+					v1 = notFullyConnectedVertices.RemoveOne();
 
 					notFullyConnectedVertices = new RandomList<Vertex>(notFullyConnectedVertices
 						.Where(v =>

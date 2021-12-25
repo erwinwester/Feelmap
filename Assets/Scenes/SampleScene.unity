@@ -174,7 +174,7 @@ MonoBehaviour:
   GraphFloor: -10
   RepulsionForceScale: 1
   PullForceScale: 1
-  MaxForceMagnitude: 10
+  MaxForceMagnitude: 40
   CenterOfGraph: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -367,9 +367,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0c58877211c9a14b816025e2de30ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainSpeed: 10
-  maxShift: 20
-  rotateSpeed: 10
+  mainSpeed: 20
+  maxShift: 40
+  rotateSpeed: 20
 --- !u!1 &2058712939
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,8 +401,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   filename: .\Data\feelmap.json
   graphManager: {fileID: 368193446}
-  VerticesToSpawn: 40
-  AverageConnectedness: 1.2
+  VerticesToSpawn: 30
+  AverageConnectedness: 1.9
   Acyclic: 1
   EdgeMaxLength: 10
   EdgeStiffness: 10
