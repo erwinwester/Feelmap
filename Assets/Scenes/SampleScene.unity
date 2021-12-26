@@ -174,7 +174,7 @@ MonoBehaviour:
   GraphFloor: -10
   RepulsionForceScale: 1
   PullForceScale: 1
-  MaxForceMagnitude: 40
+  MaxForceMagnitude: 100
   CenterOfGraph: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -404,7 +404,8 @@ MonoBehaviour:
   VerticesToSpawn: 30
   AverageConnectedness: 1.9
   Acyclic: 1
-  EdgeMaxLength: 10
+  EdgeMinLength: 2
+  EdgeMaxLength: 6
   EdgeStiffness: 10
 --- !u!4 &2058712941
 Transform:

@@ -50,6 +50,11 @@ namespace Assets.Scripts
             return Feel;
         }
 
+        bool IGraphVertexInfoObject.IsRoot()
+        {
+            return Root;
+        }
+
         void IGraphVertexInfoObject.SetDescription(string description)
         {
             this.Description = description;

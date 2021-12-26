@@ -23,7 +23,8 @@ namespace Assets.Scripts
 		[Tooltip("Not used when the graph is acyclic. Because the graph is always connected.")]
 		public float AverageConnectedness;
 		public bool Acyclic;
-		public float EdgeMaxLength = 10f;
+		public float EdgeMinLength = 2f;
+		public float EdgeMaxLength = 6f;
 		public float EdgeStiffness = 10f;
 
 		public Feelmap feelmap = new();
@@ -53,10 +54,11 @@ namespace Assets.Scripts
 				vertex.Id = i;
 				vertex.Lightness = Random.value;
 				vertex.SetInfoObject(new Subject { 
-					Description = i.ToString(),
+					Description = "Subject "+i.ToString(),
 					Energy = Random.value,
-					Distance = Random.value,
-					Feel = Random.value,
+					Distance = Random.Range(0.2f, 0.6f),
+					Feel = Random.Range(0.4f, 1.0f),
+					Root = (i == 0),
 				});
 				vertices.Add(vertex);
 			}
@@ -64,15 +66,18 @@ namespace Assets.Scripts
 			// Spawn all edges.
 			var unconnectedVertices = new RandomList<Vertex>(vertices);
 			var connectedVertices = new RandomList<Vertex>();
-			connectedVertices.Add(unconnectedVertices.RemoveOne());
+			//connectedVertices.Add(unconnectedVertices.RemoveOne());
+			var root = unconnectedVertices.First(v => v.InfoObject.IsRoot());
+			unconnectedVertices.Remove(root);
+			connectedVertices.Add(root);
 
-			int j = 2 + Random.Range(0, 3); ;
+			int j = Random.Range(2, 5); ;
 			Vertex v1 = connectedVertices.GetOne();
 			while (unconnectedVertices.Any())
 			{
 				if (j<=0)
                 {
-					j = 2 + Random.Range(0, 3);
+					j = Random.Range(2, 5);
 					v1 = connectedVertices.GetOne();
 				}
 				j--;
@@ -82,7 +87,10 @@ namespace Assets.Scripts
 				Edge edge = new();
 				edge.VertexA = v1;
 				edge.VertexB = v2;
-				edge.MaxLength = EdgeMaxLength;
+				// MaxLength
+				// - More distance more length
+				// - More feeling less length
+				edge.MaxLength = EdgeMinLength + EdgeMaxLength * v2.InfoObject.GetDistance() / v2.InfoObject.GetFeel();
 				edge.Stiffness = EdgeStiffness;
 				edges.Add(edge);
 				connectedVertices.Add(v2);

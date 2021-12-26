@@ -2,6 +2,7 @@
 {
     public interface IGraphVertexInfoObject
     {
+        bool IsRoot();
         string GetDescription();
         float GetEnergy();
         float GetFeel();

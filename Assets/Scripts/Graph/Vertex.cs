@@ -15,8 +15,9 @@ public class Vertex : MonoBehaviour
 	public int Connectedness => this.ConnectedEdges.Count;
 	
 	private Rigidbody _rigidbody;
-	private Material _material;
-	private TextMeshPro _textMeshPro;
+	private Renderer _renderer;
+
+	public TextMeshProUGUI textLabel;
 
 	public IGraphVertexInfoObject InfoObject { get; private set; }
 
@@ -30,22 +31,37 @@ public class Vertex : MonoBehaviour
 
 	public void Start()
 	{
-		this._rigidbody = this.GetComponent<Rigidbody>();
-		this._material = this.GetComponentInChildren<MeshRenderer>().material;
-		this._textMeshPro = this.GetComponentInChildren<TextMeshPro>();
+		_rigidbody = this.GetComponent<Rigidbody>();
+		_renderer = this.GetComponentInChildren<MeshRenderer>();
 	}
 
     public void Update()
     {
-		this._material.color = Color.Lerp(Color.black, Color.white, Lightness);
+		// Update color depending on Lightness
+		this._renderer.material.color = Color.Lerp(Color.black, Color.white, Lightness);
 
+		// Update text when updated
 		if (this.InfoObjectUpdated == true)
 		{
 			this.InfoObjectUpdated = false;
-			if (this._textMeshPro != null && this.InfoObject != null)
+			if (textLabel != null && this.InfoObject != null)
 			{
-				_textMeshPro.text = this.InfoObject.GetDescription();
+				textLabel.text = this.InfoObject.GetDescription();
 			}
+		}
+
+		// Position the UI text over the Sphere of the vertex
+		Vector3 textPosition = Camera.main.WorldToScreenPoint(this.transform.position);
+		textLabel.transform.position = textPosition;
+
+		// Hide Text if the vertex is not visible (else it will show up when it is behind camera at some point)
+		if (_renderer.isVisible == false)
+		{
+			textLabel.enabled = false;
+		}
+		else
+		{
+			textLabel.enabled = true;
 		}
 	}
 
@@ -92,5 +108,6 @@ public class Vertex : MonoBehaviour
 		// And scale them to the elapsed time and maximum move speed.
 		// this.transform.Translate(Vector3.ClampMagnitude(compositeForce * deltaTime, maximumMoveDelta));
 		this._rigidbody.AddForce(Vector3.ClampMagnitude(compositeForce, maximumForceMagnitude));
+		//this._rigidbody.AddForce(compositeForce);
 	}
 }
