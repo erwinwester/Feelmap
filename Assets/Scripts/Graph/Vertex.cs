@@ -40,7 +40,7 @@ public class Vertex : MonoBehaviour
 		// Update color depending on Lightness
 		this._renderer.material.color = Color.Lerp(Color.black, Color.white, Lightness);
 
-		// Update text when updated
+		// Update text when info object is updated
 		if (this.InfoObjectUpdated == true)
 		{
 			this.InfoObjectUpdated = false;
