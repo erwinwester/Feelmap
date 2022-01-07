@@ -39,93 +39,77 @@ namespace Assets.Scripts
 		// Update is called once per frame
 		void Update()
 		{
+			// Save en load
+			if (Input.GetKeyDown(KeyCode.S) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+			{
+				SaveFeelmap(feelmap);
+			}
 
+			if (Input.GetKeyDown(KeyCode.L) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+			{
+				ReloadGraph();
+			}
+
+			if (Input.GetKeyDown(KeyCode.R) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+			{
+				InitializeGraphRandom();
+			}
 		}
 
-		public void InitializeGraphRandom()
+		private void InitializeGraphRandom()
 		{
-			List<Edge> edges = new List<Edge>();
-			List<Vertex> vertices = new List<Vertex>();
+			feelmap = new();
 
 			// Spawn all vertices.
 			for (int i = 0; i < this.VerticesToSpawn; i++)
 			{
-				Vertex vertex = new();
-				vertex.Id = i;
-				vertex.Lightness = Random.value;
-				vertex.SetInfoObject(new Subject { 
-					Description = "Subject "+i.ToString(),
+				feelmap.Subjects.Add(new Subject
+				{
+					Id = i,
+					Description = "Subject " + i.ToString(),
 					Energy = Random.value,
 					Distance = Random.Range(0.2f, 0.6f),
 					Feel = Random.Range(0.4f, 1.0f),
 					Root = (i == 0),
 				});
-				vertices.Add(vertex);
 			}
 
-			// Spawn all edges.
-			var unconnectedVertices = new RandomList<Vertex>(vertices);
-			var connectedVertices = new RandomList<Vertex>();
-			//connectedVertices.Add(unconnectedVertices.RemoveOne());
-			var root = unconnectedVertices.First(v => v.InfoObject.IsRoot());
-			unconnectedVertices.Remove(root);
-			connectedVertices.Add(root);
+			//===========================================================
 
-			int j = Random.Range(2, 5); ;
-			Vertex v1 = connectedVertices.GetOne();
-			while (unconnectedVertices.Any())
+			// Spawn all edges.
+			var unconnectedSubjects = new RandomList<Subject>(feelmap.Subjects);
+			var connectedSubjects = new RandomList<Subject>();
+
+			var root = unconnectedSubjects.First(s => s.Root == true);
+			unconnectedSubjects.Remove(root);
+			connectedSubjects.Add(root);
+
+			int id = 0;
+			int j = Random.Range(2, 5);
+			Subject s1 = connectedSubjects.GetOne();
+			while (unconnectedSubjects.Any())
 			{
 				if (j<=0)
                 {
 					j = Random.Range(2, 5);
-					v1 = connectedVertices.GetOne();
+					s1 = connectedSubjects.GetOne();
 				}
 				j--;
 
-				Vertex v2 = unconnectedVertices.RemoveOne();
+				Subject s2 = unconnectedSubjects.RemoveOne();
 
-				Edge edge = new();
-				edge.VertexA = v1;
-				edge.VertexB = v2;
-				// MaxLength
-				// - More distance more length
-				// - More feeling less length
-				edge.MaxLength = EdgeMinLength + EdgeMaxLength * v2.InfoObject.GetDistance() / v2.InfoObject.GetFeel();
-				edge.Stiffness = EdgeStiffness;
-				edges.Add(edge);
-				connectedVertices.Add(v2);
+				Influence influence = new() { 
+					Id = id++,
+					FromSubject = s1,
+					ToSubject = s2,
+					EnergyFactor = 1.0f,
+				};
+
+				feelmap.Influences.Add(influence);
+				connectedSubjects.Add(s2);
 			}
 
-			if (!Acyclic)
-			{
-				int maxEdges = vertices.Count * (vertices.Count - 1) / 2;
-				int edgesToSpawn = (int)Mathf.Min(maxEdges, vertices.Count * AverageConnectedness);
-				float actualAverageConnectedness = (float)edgesToSpawn / (float)vertices.Count;
-				float currentAverageConnectedness = (float)edges.Count / (float)vertices.Count;
-				while (currentAverageConnectedness < actualAverageConnectedness)
-				{
-					var notFullyConnectedVertices = new RandomList<Vertex>(vertices.Where(v => v.Connectedness < vertices.Count - 1));
-					v1 = notFullyConnectedVertices.RemoveOne();
-
-					notFullyConnectedVertices = new RandomList<Vertex>(notFullyConnectedVertices
-						.Where(v =>
-						!v.ConnectedEdges.Select(e => e.VertexA).Contains(v1)
-						|| !v.ConnectedEdges.Select(e => e.VertexB).Contains(v1)));
-					Vertex v2 = notFullyConnectedVertices.RemoveOne();
-
-					Edge edge = new();
-					edge.VertexA = v1;
-					edge.VertexB = v2;
-					edge.MaxLength = EdgeMaxLength;
-					edge.Stiffness = EdgeStiffness;
-					edges.Add(edge);
-					unconnectedVertices.Remove(v2);
-
-					currentAverageConnectedness = (float)edges.Count / (float)vertices.Count;
-				}
-			}
-
-			graphManager.CreateGraph(vertices, edges);
+			CreateGraphFromFeelmap();
 		}
 
 		private void ReloadGraph()
@@ -159,6 +143,7 @@ namespace Assets.Scripts
 				edge.VertexA = vertices.Single(v => v.Id == Influence.FromSubject.Id);
 				edge.VertexB = vertices.Single(v => v.Id == Influence.ToSubject.Id);
 				edge.MaxLength = EdgeMaxLength;
+				edge.MaxLength = EdgeMinLength + EdgeMaxLength * edge.VertexA.InfoObject.GetDistance() / edge.VertexB.InfoObject.GetFeel();
 				edge.Stiffness = EdgeStiffness;
 				edge.SetInfoObject(Influence);
 				edges.Add(edge);
@@ -167,7 +152,7 @@ namespace Assets.Scripts
 			graphManager.CreateGraph(vertices, edges);
 		}
 
-		private void SaveFeelmap()
+		private void SaveFeelmap(Feelmap feelmap)
 		{
 			// Copy to Dto for serialization
 			FeelmapDto feelmapDto = new();
